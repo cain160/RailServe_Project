@@ -31,8 +31,79 @@
 		<main id="center" class="column">
 			<article>
 			<h2><b>Tracking Database</b></h2>
+			<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Device Selection</h2>         
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Vehicle</th>
+        <th>Hardware ID</th>
+        <th>Purpose</th>
+		<th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Tram 1</td>
+        <td>AAAA1</td>
+        <td>Transport Shipment A</td>
+		<td><button onclick="window.location='details1.html'" button type="button" class="btn btn-info">Details</button></td>
+      </tr>
+      <tr>
+        <td>Tram 2</td>
+        <td>BBBB2</td>
+        <td>Transport Shipment B</td>
+		<td><button onclick="window.location='details2.html'" button type="button" class="btn btn-info">Details</button></td>
+      </tr>
+      <tr>
+        <td>Tram 3</td>
+        <td>CCCC3</td>
+        <td>Transport Shipment C</td>
+		<td><button onclick="window.location='details3.html'" button type="button" class="btn btn-info">Details</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 			<!--Display Database here!-->
 			<p>Place database content here!</p>
+			<style>
+       #map {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        //var uluru = {lat: -25.363, lng: 131.044};
+		//N = Positive
+		//S = Negative
+		//W = Negative
+		//E = Positive
+		var uluru = {lat: 33.9397, lng: -84.5197};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPYnUWFD4QdPmpw8d8iYBqZCaY_rnbTw8&callback=initMap">
+    </script>
 <body>
 <!--Commenting out login for now
 <h2>Login Form</h2>
