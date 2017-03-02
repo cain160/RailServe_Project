@@ -81,25 +81,69 @@
     </style>
   </head>
   <body>
-	  <!--Begin Google Map Stuff-->
     <h3>My Google Maps Demo</h3>
+
+	Latitude: <input type="text" id="myLat" value="">
+	Longitude: <input type="text" id="myLon" value="">
+	<button onclick="corMap()" class="btn btn-info">Update Coordinates</button>
     <div id="map"></div>
     <script>
+	
       function initMap() {
+	  
         //var uluru = {lat: -25.363, lng: 131.044};
 		//N = Positive
 		//S = Negative
 		//W = Negative
 		//E = Positive
-		var uluru = {lat: 33.9397, lng: -84.5197};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
+		//var x = document.getElementById("myLat").value;
+		//var y = document.getElementById("myLon").value;
+		//Vehicle 1 Coordinates
+		var x = 33.9397;
+		var y = -84.5197;
+		//Vehicle 2 Coordinates
+		var a = 40.8258;
+		var b = -96.6852;
+		//Vehicle 3 Coordinates
+		var c = 34.0522;
+		var d = -118.2437;
+	function corMap()
+	{
+	var x = document.getElementById("myLat").value;
+	var y  = document.getElementById("myLon").value;
+	}
+		//var uluru = {lat: 33.9397, lng: -84.5197};
+		var myCenter = {lat: x, lng: y};
+		var myCenter2 = {lat: a, lng: b};
+		var myCenter3 = {lat: c, lng: d};
+		var mapCanvas = document.getElementById("map");
+		var mapOptions = {center: myCenter, zoom: 4};
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+		var marker = new google.maps.Marker({position:myCenter, animation:google.maps.Animation.BOUNCE});
+		var marker2 = new google.maps.Marker({position:myCenter2, animation:google.maps.Animation.BOUNCE});
+		var marker3 = new google.maps.Marker({position:myCenter3, animation:google.maps.Animation.BOUNCE});
+		  marker.setMap(map);
+		  marker2.setMap(map);
+		  marker3.setMap(map);
+		  var infowindow = new google.maps.InfoWindow({
+    content: "Vehicle 1"});
+	var infowindow2 = new google.maps.InfoWindow({
+    content: "Vehicle 2"});
+	var infowindow3 = new google.maps.InfoWindow({
+    content: "Vehicle 3"});
+		 // Zoom to 9 when clicking on marker
+		google.maps.event.addListener(marker,'click',function() {
+		map.setZoom(9);
+		map.setCenter(marker.getPosition());
+  });
+        //var marker = new google.maps.Marker({
+          //position: uluru,
+		  //position: {x,y}
+          //map: map
+        //});
+		infowindow.open(map,marker);
+		infowindow2.open(map,marker2);
+		infowindow3.open(map,marker3);
       }
     </script>
     <script async defer
@@ -127,7 +171,10 @@
 -->
 <!--End of Login Form -->
 
-				<p><script>generateText(50)</script></p>
+				<!--<p><script>generateText(50)</script></p>-->
+				</br>
+				</br>
+				</br>
 			</article>								
 		</main>
 
@@ -148,8 +195,9 @@
 
 		<div id="right" class="column">
 			<h3>Right heading</h3>
-			<p> So long as there is breath in me, that long will I persist. 
-			</br></br>For now I know one of the greatest principles of success; if I persist long enough I will win.</p>
+			<!--<p> So long as there is breath in me, that long will I persist. 
+			</br></br>For now I know one of the greatest principles of success; if I persist long enough I will win.</p>-->
+			<p>Far and away the best prize that life has to offer is the chance to work hard at work worth doing.</p>
 		</div>
 
 	</div>
