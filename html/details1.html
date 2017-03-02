@@ -31,7 +31,7 @@
 		<main id="center" class="column">
 			<article>
 			<h2><b>Tracking Database</b></h2>
-			<h2>Welcome to Details 1 Page!</h2>
+			<h2>Welcome to Vehicle 1's Page!</h2>
 			<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -83,23 +83,30 @@
   </head>
   <body>
     <h3>My Google Maps Demo</h3>
+	Latitude: <input type="text" id="myLat" value="">
+	Longitude: <input type="text" id="myLon" value="">
+	<button onclick="corMap()" class="btn btn-info">Update Coordinates</button>
     <div id="map"></div>
     <script>
       function initMap() {
-        //var uluru = {lat: -25.363, lng: 131.044};
-		//N = Positive
-		//S = Negative
-		//W = Negative
-		//E = Positive
-		var uluru = {lat: 33.9397, lng: -84.5197};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
+        var x = document.getElementById("myLat").value;
+	var y  = document.getElementById("myLon").value;
+	
+		var x = 33.9397;
+		var y = -84.5197;
+		//var uluru = {lat: 33.9397, lng: -84.5197};
+		var myCenter = {lat: x, lng: y};
+		var mapCanvas = document.getElementById("map");
+		var mapOptions = {center: myCenter, zoom: 4};
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+		var marker = new google.maps.Marker({position:myCenter, animation:google.maps.Animation.BOUNCE});
+
+		  marker.setMap(map);
+		 // Zoom to 9 when clicking on marker
+		google.maps.event.addListener(marker,'click',function() {
+		map.setZoom(9);
+		map.setCenter(marker.getPosition());
+  });
       }
     </script>
     <script async defer
@@ -127,7 +134,10 @@
 -->
 <!--End of Login Form -->
 
-				<p><script>generateText(50)</script></p>
+				<!--<p><script>generateText(50)</script></p>-->
+				</br>
+				</br>
+				</br>
 			</article>								
 		</main>
 
@@ -148,8 +158,9 @@
 
 		<div id="right" class="column">
 			<h3>Right heading</h3>
-			<p> So long as there is breath in me, that long will I persist. 
-			</br></br>For now I know one of the greatest principles of success; if I persist long enough I will win.</p>
+			<!--<p> So long as there is breath in me, that long will I persist. 
+			</br></br>For now I know one of the greatest principles of success; if I persist long enough I will win.</p>-->
+			<p>Far and away the best prize that life has to offer is the chance to work hard at work worth doing.</p>
 		</div>
 
 	</div>
