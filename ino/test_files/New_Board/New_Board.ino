@@ -20,23 +20,21 @@ void setup()
   delay(300);
   while(GSMSerial.available())
     readBites();
-  delay(3000);  
+  delay(300);  
 }
 
 void loop()
 {
-  delay(30000);
-  GSMSerial.println("AT+CGPSINF=2");
-  while(GSMSerial.available())
-    readBites();
+  delay(300);
+  readBites();
 }
 
 void readBites(){
   if(Serial.available()){
-    GSMSerial.print((char)Serial.read());
+    GSMSerial.print(Serial.readString());
   }
   else if(GSMSerial.available()){
-    Serial.print((char)GSMSerial.read());
+    Serial.print(GSMSerial.readString());
   }
 }
 
