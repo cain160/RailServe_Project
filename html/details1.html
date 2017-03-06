@@ -36,7 +36,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-<body>
 
 <div class="container">
   <h2>Device Selection</h2>         
@@ -81,13 +80,14 @@
        }
     </style>
   </head>
-  <body>
     <h3>My Google Maps Demo</h3>
 	Latitude: <input type="text" id="myLat" value="">
 	Longitude: <input type="text" id="myLon" value="">
 	<button onclick="corMap()" class="btn btn-info">Update Coordinates</button>
-    <div id="map"></div>
+	<!--Old Map of Just current location-->
+    <!--<div id="map"></div>
     <script>
+	
       function initMap() {
         var x = document.getElementById("myLat").value;
 	var y  = document.getElementById("myLon").value;
@@ -111,8 +111,49 @@
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPYnUWFD4QdPmpw8d8iYBqZCaY_rnbTw8&callback=initMap">
+    </script>-->
+	<div id="map" style="width:100%;height:500px"></div>
+
+<script>
+function myMap() {
+  var kennesaw = new google.maps.LatLng(33.9397, -84.5197);
+  var bigChicken = new google.maps.LatLng(33.9514,-84.5204);
+  //Johnnie Maccracken's
+  var theBar = new google.maps.LatLng(33.9519,-84.5488);
+
+  var mapCanvas = document.getElementById("map");
+  var mapOptions = {center: kennesaw, zoom: 14};
+  var map = new google.maps.Map(mapCanvas,mapOptions);
+  var marker = new google.maps.Marker({position:kennesaw});
+  var marker2 = new google.maps.Marker({position:bigChicken});
+  var marker3 = new google.maps.Marker({position:theBar});
+  marker.setMap(map);
+  var infowindow = new google.maps.InfoWindow({
+    content: "Starting Point"});
+  marker2.setMap(map);
+  var infowindow2 = new google.maps.InfoWindow({
+    content: "Destination 1"});
+  marker3.setMap(map);
+  var infowindow3 = new google.maps.InfoWindow({
+    content: "Destination 2"});
+	infowindow.open(map,marker);
+	infowindow2.open(map,marker2);
+	infowindow3.open(map,marker3);
+  var flightPath = new google.maps.Polyline({
+    //Start, Dest 1, Dest 2
+    path: [kennesaw, bigChicken, theBar],
+    strokeColor: "#0000FF",
+    strokeOpacity: 0.8,
+    strokeWeight: 2
+  });
+  flightPath.setMap(map);
+}
+</script>
+ <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPYnUWFD4QdPmpw8d8iYBqZCaY_rnbTw8&callback=myMap">
     </script>
-<body>
+	</br>
+	</br>
 <!--Commenting out login for now
 <h2>Login Form</h2>
 
