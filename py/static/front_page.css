@@ -11,6 +11,14 @@
 		{
 			background-color: #cccccc;
 		}
+		.home-image
+		{
+			color: #FFFFFF;
+		}
+		.fa-home
+		{
+			color: #FFFFFF;
+		}
 		#header p 
 		{
 			color: #FFFFFF;
@@ -711,4 +719,5 @@ input[type="button"].btn-block {
 .table-responsive.table-bordered {
   border: 0;
 }
+
 		
