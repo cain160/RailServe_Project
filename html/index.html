@@ -5,40 +5,27 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>RailServe Login</title>
+	
 	<link rel="stylesheet" href="front_page.css">
-	<!--<link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.min.css"> -->
-	<!--JavaScript -->
-	<script type="text/javascript">
-		/* =============================
-		This script generates sample text for the body content. 
-		You can remove this script and any reference to it. 
-		 ============================= */
-		var bodyText=["The smaller your reality, the more convinced you are that you know everything.", "If the facts don't fit the theory, change the facts.", "The past has no power over the present moment.", "This, too, will pass.", "</p><p>You will not be punished for your anger, you will be punished by your anger.", "Peace comes from within. Do not seek it without.", "<h3>Heading</h3><p>The most important moment of your life is now. The most important person in your life is the one you are with now, and the most important activity in your life is the one you are involved with now."]
-		function generateText(sentenceCount){
-			for (var i=0; i<sentenceCount; i++)
-			document.write(bodyText[Math.floor(Math.random()*7)]+" ")
-		}
-	</script>	
-	<!--End JavaScript -->
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"> -->
+<!-- 	<link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.min.css"> -->
+<header id="header">
+    <p class="home"><a href="index.html"><div class="home-image"><i class="fa fa-home"> Homepage</i></a></p>
+  </header>
 </head>
 
 <body>
-
-	<header id="header"><p>Railserve Tracking Login</p></header>
-
 	<div id="container">
 
 		<main id="center" class="column">
 			<article>
-			<h2><b>Tracking Database</b></h2>
 			<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
+ <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 
 <div class="container">
-  <h2>Device Selection</h2>         
+  <h2><b>Device Selection</b></h2>         
   <table class="table table-bordered table-hover">
     <thead>
       <tr>
@@ -79,8 +66,6 @@
         width: 100%;
        }
     </style>
-  </head>
-  <body>
     <h3>My Google Maps Demo</h3>
 
 	Latitude: <input type="text" id="myLat" value="">
@@ -126,11 +111,11 @@
 		  marker2.setMap(map);
 		  marker3.setMap(map);
 		  var infowindow = new google.maps.InfoWindow({
-    content: "Vehicle 1"});
-	var infowindow2 = new google.maps.InfoWindow({
-    content: "Vehicle 2"});
-	var infowindow3 = new google.maps.InfoWindow({
-    content: "Vehicle 3"});
+        content: "Vehicle 1"});
+	    var infowindow2 = new google.maps.InfoWindow({
+        content: "Vehicle 2"});
+	    var infowindow3 = new google.maps.InfoWindow({
+        content: "Vehicle 3"});
 		 // Zoom to 9 when clicking on marker
 		google.maps.event.addListener(marker,'click',function() {
 		map.setZoom(9);
@@ -149,7 +134,6 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPYnUWFD4QdPmpw8d8iYBqZCaY_rnbTw8&callback=initMap">
     </script>
-<body>
 <!--Commenting out login for now
 <h2>Login Form</h2>
 
@@ -195,8 +179,6 @@
 
 		<div id="right" class="column">
 			<h3>Right heading</h3>
-			<!--<p> So long as there is breath in me, that long will I persist. 
-			</br></br>For now I know one of the greatest principles of success; if I persist long enough I will win.</p>-->
 			<p>Far and away the best prize that life has to offer is the chance to work hard at work worth doing.</p>
 		</div>
 
