@@ -11,6 +11,11 @@
 		{
 			background-color: #cccccc;
 		}
+		a
+		{
+			color: #FFFFFF;
+			text-decoration: none;
+		}
 		.home-image
 		{
 			color: #FFFFFF;
@@ -22,6 +27,14 @@
 		#header p 
 		{
 			color: #FFFFFF;
+		}
+		ul
+		{
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			color: #FFFFFF;
+			text-decoration: none;
 		}
 		
 		#container {
@@ -73,6 +86,7 @@
 		#container .column {
 			padding-bottom: 1001em;
 			margin-bottom: -1000em;
+			text-decoration: none;
 		}
 
 		/* Fix for the footer */
@@ -106,6 +120,7 @@
 			list-style-type: none;
 			margin: 0;
 			padding: 0;
+			
 		}
 		
 		nav ul a {
