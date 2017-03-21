@@ -6,7 +6,7 @@
 	<link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon/>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>RailServe Login</title>
-	<link rel="stylesheet" href="static/front_page.css">
+	<link rel="stylesheet" href="front_page.css">
 	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 	<!--<link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.min.css"> -->
 	<header id="header">
@@ -27,7 +27,7 @@
 			<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
  <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
-  
+ <!--  
 <div class="container">        
   <table class="table table-bordered table-hover">
     <thead>
@@ -59,10 +59,40 @@
       </tr>
     </tbody>
   </table>
-</div>
+</div> -->
 
 			<!--Display Database here!-->
-			<p>Place database content here!</p>
+			<div class="container">
+			<style>
+			.table td
+			{
+			text-align: center;
+			}
+			</style>
+			<h2>Vehicle 2 Data </h2>
+			<table class="table table-inverse table-hover">
+    <thead>
+      <tr>
+		<th>Date</th>
+		<th>Time</th>
+		<th>Latitude</th>
+		<th>Longitude</th>
+        <th>Distance</th>
+        <th>Hours On</th>
+		
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+		<td>3/21/17</td>
+        <td>5:42 PM</td>
+		<td>40.8258</td>
+		<td>-96.6852</td>
+        <td>2 miles</td>
+		<td>4</td>
+    </tbody>
+  </table>
+</div>
 			<style>
        #map {
         height: 400px;
@@ -150,10 +180,12 @@
 		</nav>
 
 		<div id="right" class="column">
-			<h3>Right heading</h3>
-			<!--<p> So long as there is breath in me, that long will I persist. 
-			</br></br>For now I know one of the greatest principles of success; if I persist long enough I will win.</p>-->
-			<p>Far and away the best prize that life has to offer is the chance to work hard at work worth doing.</p>
+			<h3>Vehicle Selection</h3>
+			<ul>
+			<li><a href="details1.html">Vehicle 1</a></li>
+			<li><a href="details2.html">Vehicle 2</a></li>
+			<li><a href="details3.html">Vehicle 3</a></li>
+			</ul>
 		</div>
 
 	</div>
