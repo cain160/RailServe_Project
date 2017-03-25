@@ -1,6 +1,23 @@
 from flask import Flask, render_template
+import sqlite3
+
+db = 'db/et_dev.sqlite'
+conn = sqlite3.connect(db)
+cur = conn.execute('select * from Location_Info')
 
 app = Flask(__name__)
+
+####TESTING VARIABLES####
+#
+#
+#
+#
+modNum = 3
+#
+#
+#
+#
+####TESTING VARIABLES####
 
 @app.route('/')
 @app.route('/index.html')
@@ -18,6 +35,31 @@ def det_page2():
 @app.route('/details3.html')
 def det_page3():
     return render_template('details3.html')
+    
+def parse_dates_from_db():
+    cur.execute('select DateAndTime from Location_Info where ModelNumber = ' + str(modNum))
+    rows = cur.fetchall()
+    for row in rows:
+        stringRow = str(row)
+        date, time = stringRow.split(" ")
+        
+        date = date.split("'")[1]
+        time = time.split("'")[0]
+        
+        year, month, day = date.split("-")
+        hour, minute, seconds = time.split(":")
+        
+        print(date)
+        print(time)
+        print(int(year))
+        print(int(month))
+        print(int(day))
+        print(float(hour))
+        print(float(minute))
+        print(float(seconds))
 
 if __name__ == '__main__':
+    rows = cur.fetchall()
+    parse_dates_from_db()            
     app.run(port=int("5000"), host='192.168.1.187', debug=True)
+
