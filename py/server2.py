@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 import sqlite3
+import re
 
 db = 'db/et_dev.sqlite'
 conn = sqlite3.connect(db)
@@ -39,27 +40,13 @@ def det_page3():
 def parse_dates_from_db():
     cur.execute('select DateAndTime from Location_Info where ModelNumber = ' + str(modNum))
     rows = cur.fetchall()
+    dateTimeList = []
     for row in rows:
         stringRow = str(row)
-        date, time = stringRow.split(" ")
-        
-        date = date.split("'")[1]
-        time = time.split("'")[0]
-        
-        year, month, day = date.split("-")
-        hour, minute, seconds = time.split(":")
-        
-        print(date)
-        print(time)
-        print(int(year))
-        print(int(month))
-        print(int(day))
-        print(float(hour))
-        print(float(minute))
-        print(float(seconds))
+        dateTimeList.append(re.findall(r"[\w]+", stringRow))
 
 if __name__ == '__main__':
     rows = cur.fetchall()
-    parse_dates_from_db()            
+    parse_dates_from_db()
     app.run(port=int("5000"), host='192.168.1.187', debug=True)
 
