@@ -1,9 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 import sqlite3
 import re
 
 db = 'db/et_dev.sqlite'
-conn = sqlite3.connect(db)
+conn = sqlite3.connect(db, check_same_thread=False)
 cur = conn.execute('select * from Location_Info')
 
 app = Flask(__name__)
@@ -37,16 +37,34 @@ def det_page2():
 def det_page3():
     return render_template('details3.html')
     
+@app.route('/device', methods=['GET', 'POST'])
+def device():
+    startTime = request.form.get('start-time')
+    endTime = request.form.get('end-time')
+    device = request.form.get('device-search')
+    
+    cur.execute('select * from Location_Info where datetime(DateAndTime) > datetime(?) and datetime(DateAndTime) < datetime(?) and ModelNumber = ?', (startTime, endTime, device))
+    rows = cur.fetchall()
+    for row in rows:
+        print(str(row))    
+
+    device = int(device)
+    if(device == 1):
+        return redirect("details1.html")
+    elif(device == 2):
+        return redirect("details2.html")
+    elif(device == 3):
+        return redirect("details3.html")
+    
 def parse_dates_from_db():
     cur.execute('select DateAndTime from Location_Info where ModelNumber = ' + str(modNum))
-    rows = cur.fetchall()
+    rows = cur.fetchall()   
     dateTimeList = []
-    for row in rows:
-        stringRow = str(row)
-        dateTimeList.append(re.findall(r"[\w]+", stringRow))
+    for date in rows:
+        stringDate = str(date)
+        dateTimeList.append(re.findall(r"[\w]+", stringDate))
 
 if __name__ == '__main__':
-    rows = cur.fetchall()
     parse_dates_from_db()
     app.run(port=int("5000"), host='192.168.1.187', debug=True)
 

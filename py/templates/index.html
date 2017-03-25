@@ -3,7 +3,6 @@
 <!--Login Page -->
 <html>
 <head>
-	
 	<link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon/>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>RailServe Login</title>
@@ -12,9 +11,9 @@
 	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
 	<!-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet"> -->
 	<!--<link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.min.css"> -->
-<header id="header">
-    <p class="home"><a href="index.html"><div class="home-image"><i class="fa fa-home"> Homepage</i></a></p>
-  </header>
+    <header id="header">
+        <p class="home"><a href="index.html"><div class="home-image"><i class="fa fa-home"> Homepage</i></a></p>
+    </header>
 </head>
 
 <body>
@@ -23,45 +22,59 @@
 		<main id="center" class="column">
 			<article>
 			<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
- <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+            <!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
 
-<div class="container">
-  <h2><b>Device Selection</b></h2>         
-  <table class="table table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Vehicle</th>
-        <th>Hardware ID</th>
-        <th>Purpose</th>
-		<th>Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Tram 1</td>
-        <td>AAAA1</td>
-        <td>Transport Shipment A</td>
-		<td><button onclick="window.location='details1.html'" button type="button" class="btn btn-info">Details</button></td>
-      </tr>
-      <tr>
-        <td>Tram 2</td>
-        <td>BBBB2</td>
-        <td>Transport Shipment B</td>
-		<td><button onclick="window.location='details2.html'" button type="button" class="btn btn-info">Details</button></td>
-      </tr>
-      <tr>
-        <td>Tram 3</td>
-        <td>CCCC3</td>
-        <td>Transport Shipment C</td>
-		<td><button onclick="window.location='details3.html'" button type="button" class="btn btn-info">Details</button></td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-			<!--Display Database here!-->
-			<style>
+        <div class="container">
+          <h2><b>Device Selection</b></h2>         
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Vehicle</th>
+                <th>Hardware ID</th>
+                <th>Purpose</th>
+                <th>Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Tram 1</td>
+                <td>AAAA1</td>
+                <td>Transport Shipment A</td>
+                <td><button onclick="window.location='details1.html'" button type="button" class="btn btn-info">Details</button></td>
+              </tr>
+              <tr>
+                <td>Tram 2</td>
+                <td>BBBB2</td>
+                <td>Transport Shipment B</td>
+                <td><button onclick="window.location='details2.html'" button type="button" class="btn btn-info">Details</button></td>
+              </tr>
+              <tr>
+                <td>Tram 3</td>
+                <td>CCCC3</td>
+                <td>Transport Shipment C</td>
+                <td><button onclick="window.location='details3.html'" button type="button" class="btn btn-info">Details</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    
+    <form id="form1"  action="{{ url_for('device') }}" method="POST" class="borderless-form">
+        Search Location Info for:
+        <br>
+        <input type="datetime-local" name="start-time">
+        <input type="datetime-local" name="end-time">
+        <br>
+        <select name="device-search">
+            <option value="1">Device 1</option>
+            <option value="2">Device 2</option>
+            <option value="3">Device 3</option>
+        </select>
+        <button button type="submit" class="btn btn-info search-button">Submit</button>
+    </form>
+    
+    <!--Display Database here!-->
+    <style>
        #map {
         height: 400px;
         width: 100%;
@@ -93,11 +106,12 @@
 		//Vehicle 3 Coordinates
 		var c = 34.0522;
 		var d = -118.2437;
-	function corMap()
-	{
-	var x = document.getElementById("myLat").value;
-	var y  = document.getElementById("myLon").value;
-	}
+        
+        function corMap()
+        {
+            var x = document.getElementById("myLat").value;
+            var y  = document.getElementById("myLon").value;
+        }
 		//var uluru = {lat: 33.9397, lng: -84.5197};
 		var myCenter = {lat: x, lng: y};
 		var myCenter2 = {lat: a, lng: b};
@@ -119,9 +133,9 @@
         content: "Vehicle 3"});
 		 // Zoom to 9 when clicking on marker
 		google.maps.event.addListener(marker,'click',function() {
-		map.setZoom(9);
-		map.setCenter(marker.getPosition());
-  });
+            map.setZoom(9);
+            map.setCenter(marker.getPosition());
+        });
         //var marker = new google.maps.Marker({
           //position: uluru,
 		  //position: {x,y}
