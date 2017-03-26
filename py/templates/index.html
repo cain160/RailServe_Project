@@ -9,10 +9,10 @@
         
         <link rel="stylesheet" href="static/front_page.css">
         <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">	
+        <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>       
         <header id="header">
             <p class="home"><a href="index.html"><div class="home-image"><i class="fa fa-home"> Homepage</i></a></p>
         </header>
-            <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
     </head>
 
     <body>
@@ -53,13 +53,13 @@
                       </table>
                     </div>
             
-                    <form id="form1"  action="{{ url_for('device') }}" method="POST" class="borderless-form">
+                    <form id="form1" action="{{ url_for('device') }}" method="POST" class="borderless-form">
                         Search Location Info for:
                         <br>
-                        <input type="datetime-local" name="start-time">
-                        <input type="datetime-local" name="end-time">
+                        <input type="datetime-local" name="start-time" id="start-time">
+                        <input type="datetime-local" name="end-time" id="end-time">
                         <br>
-                        <select name="device-search">
+                        <select name="device-search" id="device-search">
                             <option value="1">Device 1</option>
                             <option value="2">Device 2</option>
                             <option value="3">Device 3</option>
@@ -164,5 +164,17 @@
         <div id="footer-wrapper">
             <footer id="footer"><p>RailServe</p></footer>
         </div>
+        <script>
+
+            $('#form1').on('submit',function(){
+                console.log(document.getElementById("start-time").value)
+                console.log(document.getElementById("end-time").value)
+                console.log(document.getElementById("device-search").value)
+                window.localStorage.setItem("startTime", document.getElementById("start-time").value);
+                window.localStorage.setItem("endTime", document.getElementById("end-time").value);
+                window.localStorage.setItem("deviceNumber", document.getElementById("device-search").value);
+            });
+           
+        </script> 
     </body>
 </html>

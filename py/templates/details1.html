@@ -8,10 +8,10 @@
 	<title>RailServe Login</title>
 	<link rel="stylesheet" href="static/front_page.css">
 	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
-	<!--<link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.min.css"> -->
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>       
 	<header id="header">
-    <p class="home"><a href="index.html"><div class="home-image"><i class="fa fa-home"> Homepage</i></a></p>
-  </header>
+        <p class="home"><a href="index.html"><div class="home-image"><i class="fa fa-home"> Homepage</i></a></p>
+    </header>
 </head>
 
 <body>
@@ -20,182 +20,95 @@
 
 		<main id="center" class="column">
 			<article>
-			<h2>Welcome to Vehicle 1's Page!</h2>
-			<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-<!--   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+                <h2>Welcome to Vehicle 1's Page!</h2>
 
-
-<!-- <div class="container">      
-  <table class="table table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Vehicle</th>
-        <th>Hardware ID</th>
-        <th>Purpose</th>
-		<th>Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Tram 1</td>
-        <td>AAAA1</td>
-        <td>Transport Shipment A</td>
-		<td><button onclick="window.location='details1.html'" button type="button" class="btn btn-info">Details</button></td>
-      </tr>
-      <tr>
-        <td>Tram 2</td>
-        <td>BBBB2</td>
-        <td>Transport Shipment B</td>
-		<td><button onclick="window.location='details2.html'" button type="button" class="btn btn-info">Details</button></td>
-      </tr>
-      <tr>
-        <td>Tram 3</td>
-        <td>CCCC3</td>
-        <td>Transport Shipment C</td>
-		<td><button onclick="window.location='details3.html'" button type="button" class="btn btn-info">Details</button></td>
-      </tr>
-    </tbody>
-  </table>
-</div> -->
-
-                <!--Display Database here!-->
+            <!--Display Database here!-->
                 <div class="container">
+                    <style>
+                        .table td{
+                            text-align: center;
+                        }
+                    </style>
+                    <h2>Vehicle 1 Data </h2>
+                    <table class="table table-inverse table-hover">
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>Distance</th>
+                            <th>Hours On</th>
+                            
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>3/20/17</td>
+                            <td>1:02 PM</td>
+                            <td>33.9397</td>
+                            <td>-84.5197</td>
+                            <td>2.7 miles</td>
+                            <td>3</td>
+                        </tbody>
+                    </table>
+                </div>
                 <style>
-                .table td
-                {
-                text-align: center;
-                }
+                   #map {
+                    height: 400px;
+                    width: 100%;
+                   }
                 </style>
-                <h2>Vehicle 1 Data </h2>
-                <table class="table table-inverse table-hover">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-            <th>Distance</th>
-            <th>Hours On</th>
-            
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>3/20/17</td>
-            <td>1:02 PM</td>
-            <td>33.9397</td>
-            <td>-84.5197</td>
-            <td>2.7 miles</td>
-            <td>3</td>
-        </tbody>
-      </table>
-    </div>
-    <style>
-       #map {
-        height: 400px;
-        width: 100%;
-       }
-    </style>
-    <h3>My Google Maps Demo</h3>
-	Latitude: <input type="text" id="myLat" value="">
-	Longitude: <input type="text" id="myLon" value="">
-	<button onclick="corMap()" class="btn btn-info">Update Coordinates</button>
-	<!--Old Map of Just current location-->
-    <!--<div id="map"></div>
-    <script>
-	
-      function initMap() {
-        var x = document.getElementById("myLat").value;
-	var y  = document.getElementById("myLon").value;
-	
-		var x = 33.9397;
-		var y = -84.5197;
-		//var uluru = {lat: 33.9397, lng: -84.5197};
-		var myCenter = {lat: x, lng: y};
-		var mapCanvas = document.getElementById("map");
-		var mapOptions = {center: myCenter, zoom: 4};
-        var map = new google.maps.Map(mapCanvas, mapOptions);
-		var marker = new google.maps.Marker({position:myCenter, animation:google.maps.Animation.BOUNCE});
+                <h3>My Google Maps Demo</h3>
+                Latitude: <input type="text" id="myLat" value="">
+                Longitude: <input type="text" id="myLon" value="">
+                <button onclick="corMap()" class="btn btn-info">Update Coordinates</button>
+                <div id="map" style="width:100%;height:500px"></div>
 
-		  marker.setMap(map);
-		 // Zoom to 9 when clicking on marker
-		google.maps.event.addListener(marker,'click',function() {
-		map.setZoom(9);
-		map.setCenter(marker.getPosition());
-  });
-      }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPYnUWFD4QdPmpw8d8iYBqZCaY_rnbTw8&callback=initMap">
-    </script>-->
-	<div id="map" style="width:100%;height:500px"></div>
+                <script>
+                    function myMap() {
+                      var kennesaw = new google.maps.LatLng(33.9397, -84.5197);
+                      var bigChicken = new google.maps.LatLng(33.9514,-84.5204);
+                      //Johnnie Maccracken's
+                      var theBar = new google.maps.LatLng(33.9519,-84.5488);
 
-<script>
-function myMap() {
-  var kennesaw = new google.maps.LatLng(33.9397, -84.5197);
-  var bigChicken = new google.maps.LatLng(33.9514,-84.5204);
-  //Johnnie Maccracken's
-  var theBar = new google.maps.LatLng(33.9519,-84.5488);
-
-  var mapCanvas = document.getElementById("map");
-  var mapOptions = {center: kennesaw, zoom: 14};
-  var map = new google.maps.Map(mapCanvas,mapOptions);
-  var marker = new google.maps.Marker({position:kennesaw});
-  var marker2 = new google.maps.Marker({position:bigChicken});
-  var marker3 = new google.maps.Marker({position:theBar});
-  marker.setMap(map);
-  var infowindow = new google.maps.InfoWindow({
-    content: "Starting Point"});
-  marker2.setMap(map);
-  var infowindow2 = new google.maps.InfoWindow({
-    content: "Destination 1"});
-  marker3.setMap(map);
-  var infowindow3 = new google.maps.InfoWindow({
-    content: "Destination 2"});
-	infowindow.open(map,marker);
-	infowindow2.open(map,marker2);
-	infowindow3.open(map,marker3);
-  var flightPath = new google.maps.Polyline({
-    //Start, Dest 1, Dest 2
-    path: [kennesaw, bigChicken, theBar],
-    strokeColor: "#0000FF",
-    strokeOpacity: 0.8,
-    strokeWeight: 2
-  });
-  flightPath.setMap(map);
-}
-</script>
- <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPYnUWFD4QdPmpw8d8iYBqZCaY_rnbTw8&callback=myMap">
-    </script>
-	</br>
-	</br>
-<!--Commenting out login for now
-<h2>Login Form</h2>
-
-<form action="action_page.php">
-  <div class="imgcontainer">
-  </div>
-
-  <div class="container">
-    <label><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" required>
-
-    <label><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="psw" required>
-        
-    <button type="button" class="btn btn-info">Log In</button>
-    <input type="checkbox" checked="checked"> Remember me
-  </div>
-</form>
--->
-<!--End of Login Form -->
-
-				</br>
-				</br>
-				</br>
-			</article>								
+                      var mapCanvas = document.getElementById("map");
+                      var mapOptions = {center: kennesaw, zoom: 14};
+                      var map = new google.maps.Map(mapCanvas,mapOptions);
+                      var marker = new google.maps.Marker({position:kennesaw});
+                      var marker2 = new google.maps.Marker({position:bigChicken});
+                      var marker3 = new google.maps.Marker({position:theBar});
+                      marker.setMap(map);
+                      var infowindow = new google.maps.InfoWindow({
+                        content: "Starting Point"});
+                      marker2.setMap(map);
+                      var infowindow2 = new google.maps.InfoWindow({
+                        content: "Destination 1"});
+                      marker3.setMap(map);
+                      var infowindow3 = new google.maps.InfoWindow({
+                        content: "Destination 2"});
+                        infowindow.open(map,marker);
+                        infowindow2.open(map,marker2);
+                        infowindow3.open(map,marker3);
+                      var flightPath = new google.maps.Polyline({
+                        //Start, Dest 1, Dest 2
+                        path: [kennesaw, bigChicken, theBar],
+                        strokeColor: "#0000FF",
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2
+                      });
+                      flightPath.setMap(map);
+                    }
+                </script>
+                <script async defer
+                    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPYnUWFD4QdPmpw8d8iYBqZCaY_rnbTw8&callback=myMap">
+                </script>
+                </br>
+                </br>
+                </br>
+                </br>
+                </br>
+            </article>								
 		</main>
 
 		<nav id="left" class="column">
@@ -228,6 +141,39 @@ function myMap() {
 		<footer id="footer"><p>RailServe</p></footer>
 	</div>
 
+    <script>
+        <!--Function calls server to get location info from database.-->
+        
+        function getLocationInfo(start, end, dev, id){
+            var jqXHR = $.ajax({
+                type: "GET",
+                url: "http://railserve.asuscomm.com:5000/getLocInf/" + start + "/" + end + "/" + dev,
+                success: function(evt){
+                            var jsonStr = JSON.stringify(evt, undefined, 2);
+                            var len = evt['name'].length;
+                            var txt = "";
+
+                            for(var i=0; i<len; i++){
+                                txt += "<label>" + evt['name'][i][0] + " " + evt['name'][i][1] + "</label><br>"
+                            }
+
+                            $('#' + id + '').append(txt);
+                }
+            });
+            return jqXHR.responseText;
+        }
+
+        <!--Calls getSchedule function for each shift.-->
+        $(window).load(function(){
+            var start = window.localStorage.getItem("startTime");
+            var end = window.localStorage.getItem("endTime");
+            var dev = window.localStorage.getItem("deviceNumber");
+            console.log(start)
+            console.log(end)
+            console.log(dev)
+			getLocationInfo(start, end, dev);
+		});
+    </script>    
 </body>
 
 </html>

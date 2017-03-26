@@ -9,15 +9,7 @@ cur = conn.execute('select * from Location_Info')
 app = Flask(__name__)
 
 ####TESTING VARIABLES####
-#
-#
-#
-#
-modNum = 3
-#
-#
-#
-#
+ 
 ####TESTING VARIABLES####
 
 @app.route('/')
@@ -43,11 +35,6 @@ def device():
     endTime = request.form.get('end-time')
     device = request.form.get('device-search')
     
-    cur.execute('select * from Location_Info where datetime(DateAndTime) > datetime(?) and datetime(DateAndTime) < datetime(?) and ModelNumber = ?', (startTime, endTime, device))
-    rows = cur.fetchall()
-    for row in rows:
-        print(str(row))    
-
     device = int(device)
     if(device == 1):
         return redirect("details1.html")
@@ -55,9 +42,22 @@ def device():
         return redirect("details2.html")
     elif(device == 3):
         return redirect("details3.html")
+        
+@app.route('/getLocInf/<start>/<end>/<dev>', methods=['GET'])
+def get_location_info(start,end,dev):
+    startTime = start
+    endTime = end
+    device = dev
+    
+    cur.execute('select * from Location_Info where datetime(DateAndTime) > datetime(?) and datetime(DateAndTime) < datetime(?) and ModelNumber = ?', (startTime, endTime, device))
+    rows = cur.fetchall()
+    for row in rows:
+        print('Ran get loc inf: ' + str(row))
+
+    return 'GREAT'
     
 def parse_dates_from_db():
-    cur.execute('select DateAndTime from Location_Info where ModelNumber = ' + str(modNum))
+    cur.execute('select DateAndTime from Location_Info where ModelNumber = 3')
     rows = cur.fetchall()   
     dateTimeList = []
     for date in rows:
