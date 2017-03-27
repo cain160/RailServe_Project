@@ -142,8 +142,7 @@
 	</div>
 
     <script>
-        <!--Calls getLocationInfo function on load-->
-		$(window).load(function(){
+        $(window).load(function(){
             var start = window.sessionStorage.getItem("startTime");
             var end = window.sessionStorage.getItem("endTime");
             var dev = "1";
@@ -152,27 +151,27 @@
             console.log(dev)
 			getLocationInfo(start, end, dev);
 		});
-		
+        
+        <!--Function calls server to get location info from database.-->        
         function getLocationInfo(start, end, dev, id){
             var jqXHR = $.ajax({
                 type: "GET",
                 url: "http://railserve.asuscomm.com:5000/getLocInf/" + start + "/" + end + "/" + dev,
                 success: function(evt){
                             var jsonStr = JSON.stringify(evt, undefined, 2);
-                            var len = evt['name'].length;
+                            console.log(jsonStr);
+                            var len = evt['locinfo'].length;
                             var txt = "";
 
                             for(var i=0; i<len; i++){
-                                txt += "<label>" + evt['name'][i][0] + " " + evt['name'][i][1] + "</label><br>"
+                                console.log("<label>" + evt['locinfo'][i][0] + " " + evt['locinfo'][i][1] + "</label><br>")
                             }
 
-                            $('#' + id + '').append(txt);
+                            <!--$('#' + id + '').append(txt);-->
                 }
             });
             return jqXHR.responseText;
         }
-
-        <!--Calls getSchedule function for each shift.-->
     </script>    
 </body>
 

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 import sqlite3
 import re
 
@@ -51,10 +51,7 @@ def get_location_info(start,end,dev):
     
     cur.execute('select * from Location_Info where datetime(DateAndTime) > datetime(?) and datetime(DateAndTime) < datetime(?) and ModelNumber = ?', (startTime, endTime, device))
     rows = cur.fetchall()
-    for row in rows:
-        print('Ran get loc inf: ' + str(row))
-
-    return 'GREAT'
+    return jsonify({'locinfo': rows})
     
 def parse_dates_from_db():
     cur.execute('select DateAndTime from Location_Info where ModelNumber = 3')

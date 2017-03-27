@@ -182,14 +182,15 @@
                 url: "http://railserve.asuscomm.com:5000/getLocInf/" + start + "/" + end + "/" + dev,
                 success: function(evt){
                             var jsonStr = JSON.stringify(evt, undefined, 2);
-                            var len = evt['name'].length;
+                            console.log(jsonStr);
+                            var len = evt['locinfo'].length;
                             var txt = "";
 
                             for(var i=0; i<len; i++){
-                                txt += "<label>" + evt['name'][i][0] + " " + evt['name'][i][1] + "</label><br>"
+                                console.log("<label>" + evt['locinfo'][i][0] + " " + evt['locinfo'][i][1] + "</label><br>")
                             }
 
-                            $('#' + id + '').append(txt);
+                            <!--$('#' + id + '').append(txt);-->
                 }
             });
             return jqXHR.responseText;
