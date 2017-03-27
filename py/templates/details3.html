@@ -6,13 +6,18 @@
 	<link rel="shortcut icon" href="static/images/favicon.ico" type="image/x-icon/>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>RailServe Login</title>
-	<link rel="stylesheet" href="static/front_page.css">
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/front_page.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.datetimepicker.css') }}"/>
 	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
-	<script src="{{ url_for('static', filename='js/jquery.js') }}"></script> 
-	<!--<link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.min.css"> -->
+	
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.datetimepicker.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/build/jquery.datetimepicker.min.js') }}"></script>             
+	
 	<header id="header">
-<p class="home"><a href="index.html"><div class="home-image"><i class="fa fa-home"> Homepage</i></a></p>
-  </header>
+        <p class="home"><a href="index.html"><div class="home-image"><i class="fa fa-home"> Homepage</i></a></p>
+    </header>
 
 </head>
 
