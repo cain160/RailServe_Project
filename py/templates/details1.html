@@ -142,8 +142,17 @@
 	</div>
 
     <script>
-        <!--Function calls server to get location info from database.-->
-        
+        <!--Calls getLocationInfo function on load-->
+		$(window).load(function(){
+            var start = window.sessionStorage.getItem("startTime");
+            var end = window.sessionStorage.getItem("endTime");
+            var dev = "1";
+            console.log(start)
+            console.log(end)
+            console.log(dev)
+			getLocationInfo(start, end, dev);
+		});
+		
         function getLocationInfo(start, end, dev, id){
             var jqXHR = $.ajax({
                 type: "GET",
@@ -164,15 +173,6 @@
         }
 
         <!--Calls getSchedule function for each shift.-->
-        $(window).load(function(){
-            var start = window.localStorage.getItem("startTime");
-            var end = window.localStorage.getItem("endTime");
-            var dev = window.localStorage.getItem("deviceNumber");
-            console.log(start)
-            console.log(end)
-            console.log(dev)
-			getLocationInfo(start, end, dev);
-		});
     </script>    
 </body>
 

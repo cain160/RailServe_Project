@@ -8,6 +8,7 @@
 	<title>RailServe Login</title>
 	<link rel="stylesheet" href="static/front_page.css">
 	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+	<script src="{{ url_for('static', filename='js/jquery.js') }}"></script> 
 	<!--<link rel="stylesheet" type="text/css" href="Bootstrap/css/bootstrap.min.css"> -->
 	<header id="header">
 <p class="home"><a href="index.html"><div class="home-image"><i class="fa fa-home"> Homepage</i></a></p>
@@ -22,42 +23,6 @@
 		<main id="center" class="column">
 			<article>
 			<h2>Welcome to Vehicle 3's Page!</h2>
-			<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">-->
-<!--   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
-
-<!-- <div class="container">         
-  <table class="table table-bordered table-hover">
-    <thead>
-      <tr>
-        <th>Vehicle</th>
-        <th>Hardware ID</th>
-        <th>Purpose</th>
-		<th>Details</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Tram 1</td>
-        <td>AAAA1</td>
-        <td>Transport Shipment A</td>
-		<td><button onclick="window.location='details1.html'" button type="button" class="btn btn-info">Details</button></td>
-      </tr>
-      <tr>
-        <td>Tram 2</td>
-        <td>BBBB2</td>
-        <td>Transport Shipment B</td>
-		<td><button onclick="window.location='details2.html'" button type="button" class="btn btn-info">Details</button></td>
-      </tr>
-      <tr>
-        <td>Tram 3</td>
-        <td>CCCC3</td>
-        <td>Transport Shipment C</td>
-		<td><button onclick="window.location='details3.html'" button type="button" class="btn btn-info">Details</button></td>
-      </tr>
-    </tbody>
-  </table>
-</div> -->
 
 			<!--Display Database here!-->
 			<div class="container">
@@ -198,6 +163,39 @@
 		<footer id="footer"><p>RailServe</p></footer>
 	</div>
 
+	<script>
+		<!--Calls getLocationInfo function on load-->
+        $(window).load(function(){
+            var start = window.sessionStorage.getItem("startTime");
+            var end = window.sessionStorage.getItem("endTime");
+            var dev = "3";
+            console.log(start)
+            console.log(end)
+            console.log(dev)
+			getLocationInfo(start, end, dev);
+		});
+		
+		<!--Function calls server to get location info from database.-->        
+        function getLocationInfo(start, end, dev, id){
+            var jqXHR = $.ajax({
+                type: "GET",
+                url: "http://railserve.asuscomm.com:5000/getLocInf/" + start + "/" + end + "/" + dev,
+                success: function(evt){
+                            var jsonStr = JSON.stringify(evt, undefined, 2);
+                            var len = evt['name'].length;
+                            var txt = "";
+
+                            for(var i=0; i<len; i++){
+                                txt += "<label>" + evt['name'][i][0] + " " + evt['name'][i][1] + "</label><br>"
+                            }
+
+                            $('#' + id + '').append(txt);
+                }
+            });
+            return jqXHR.responseText;
+        }
+    </script>  
+	
 </body>
 
 </html>

@@ -170,9 +170,8 @@
                 console.log(document.getElementById("start-time").value)
                 console.log(document.getElementById("end-time").value)
                 console.log(document.getElementById("device-search").value)
-                window.localStorage.setItem("startTime", document.getElementById("start-time").value);
-                window.localStorage.setItem("endTime", document.getElementById("end-time").value);
-                window.localStorage.setItem("deviceNumber", document.getElementById("device-search").value);
+                window.sessionStorage.setItem("startTime", document.getElementById("start-time").value);
+                window.sessionStorage.setItem("endTime", document.getElementById("end-time").value);
             });
            
         </script> 
