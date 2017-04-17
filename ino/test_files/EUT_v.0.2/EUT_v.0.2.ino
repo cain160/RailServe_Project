@@ -34,33 +34,33 @@ void setup()
   attachInterrupt(0,interrupt0,FALLING);
   attachInterrupt(1,interrupt1,RISING);
   
-  Serial.print("freeMemory()=");
+  Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
 
   checkPower();
   //powerOn();
   
-  Serial.println("Initializing SD card...");
+  Serial.println(F("Initializing SD card..."));
 
   if (!SD.begin(10)) {
-    Serial.println("initialization failed!");
+    Serial.println(F("initialization failed!"));
     return;
   }
-  Serial.println("initialization done.");
+  Serial.println(F("initialization done."));
 
-  Serial.println("Generating file...");
+  Serial.println(F("Generating file..."));
   if(SD.exists("GPScache.txt")){
-    Serial.println("Deleting old file...");
+    Serial.println(F("Deleting old file..."));
     SD.remove("GPScache.txt");
-    Serial.println("Old file deleted");
+    Serial.println(F("Old file deleted"));
   } 
   if((myFile = SD.open("GPScache.txt", FILE_WRITE)) == false)
-    Serial.println("Failed to make file! Immediate attention required!");
+    Serial.println(F("Failed to make file! Immediate attention required!"));
   else  
-    Serial.println("New file created");
+    Serial.println(F("New file created"));
     myFile.close();
 
-  /*
+
   GSMSerial.println("AT+CGPSPWR=1");
   delay(300);
   while(GSMSerial.available())
@@ -70,31 +70,27 @@ void setup()
   while(GSMSerial.available())
     Serial.print(GSMSerial.readString());
   delay(300);
-*/
-  Serial.print("freeMemory()=");
+
+  Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
 }
 
 void loop()
 { 
-  if(OnOff){
+//  if(OnOff){
     //Get location info in $GPRMC format. Contains date.
     GSMSerial.flush();
     GSMSerial.println("AT+CGPSINF=32");
     serialText = GSMSerial.readString();
     int startOfInfo = serialText.indexOf(' ');
-    Serial.print("\nThis is the return from CGPSINF:\n");
-    Serial.print(serialText);
-    Serial.println("*****END*****");
+    Serial.println("\nThis is the return from CGPSINF:\n" + serialText + "*****END*****");
     if(serialText.indexOf("ERROR") > 0)
       Serial.println("GPS ERROR: GPS LIKELY NEEDS TO BE RESET.");
     else{
       serialText = serialText.substring(startOfInfo, startOfInfo + 60);
-      //serialText.trim();
+      serialText.trim();
     }  
-    Serial.print("\nThis is the return from substring:\n");
-    Serial.print(serialText);
-    Serial.println("\n*****END*****");
+    Serial.println("This is the return from substring:\n" + serialText + "\n*****END*****");
     
     GSMSerial.println("AT+CSQ");
     serialText2=GSMSerial.readString();
@@ -112,10 +108,14 @@ void loop()
       Serial.print("Storing data until within good signal range.\n"); 
     }  
     delay(3000); 
-  }
+//  }
 
   Serial.print("freeMemory()=");
   Serial.println(freeMemory());
+
+  delay(10000);
+  Serial.println(serialText);
+  delay(10000);
 
   int stringCounter = 1;
   while(stringCounter < 10){
