@@ -1,4 +1,4 @@
-#include <MemoryFree.h>
+//#include <MemoryFree.h>
 
 //Serial Relay - Arduino will patch a 
 //serial link between the computer and the GPRS Shield
@@ -57,8 +57,9 @@ void setup()
     Serial.println(F("Old file deleted"));
   } 
   */
-  if((myFile = SD.open("GPScache.txt", FILE_WRITE)) == false)
-    //a Serial.println(F("Failed to make file! Immediate attention required!"));
+  if((myFile = SD.open("GPScache.txt", FILE_WRITE)) == false){
+    //a Serial.println(F("Failed to make file! Immediate attention required!")); 
+  }
   else  
     //a Serial.println(F("New file created"));
     myFile.close();
@@ -71,8 +72,8 @@ void setup()
     //a Serial.print(GSMSerial.readString());
   Serial.println("AT+CGPSRST=0");
   delay(300);
-  while(GSMSerial.available())
-    Serial.flush()
+  while(Serial.available())
+    Serial.flush();
     //a Serial.print(GSMSerial.readString());
   delay(300);
   
