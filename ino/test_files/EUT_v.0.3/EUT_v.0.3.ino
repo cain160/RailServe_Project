@@ -214,16 +214,23 @@ void printToSD(String StuffToWrite){
 }
 
 void waitForFix(){
+  int startTime = millis();
+  boolean timeout = false;
   Serial.flush();
   Serial.println("AT+CGPSINF=32");
   serialText = Serial.readString();
-  while(serialText.indexOf("A") < 0){
+  while(serialText.indexOf("A") < 0 && !timeout){
     Serial.flush();
     Serial.println("AT+CGPSINF=32");
     serialText = Serial.readString();
     delay(5000);
+    if((millis() - startTime) > 300000){
+      timeout = true;
+    }
   }
-  GPSfix = true; 
+  if(!timeout){
+    GPSfix = true;
+  }
 }
 
 void powerOn(){
@@ -343,6 +350,7 @@ void interrupt0()
   if(digitalRead(3) == LOW){
     //a Serial.println("Equipment is off!");
     OnOff = false;
+    printToSD("Equipment off!");
   }
  }
  last_interrupt_time = interrupt_time;
@@ -358,6 +366,7 @@ void interrupt1()
     if(digitalRead(2) == HIGH){
       //a Serial.println("Equipment is on!");
       OnOff = true;
+    printToSD("Equipment on!");
     }
  }
  last_interrupt_time = interrupt_time;
