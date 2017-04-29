@@ -3,45 +3,93 @@
 //at 19200 bps 8-N-1
 //Computer is connected to Hardware UART
 //GPRS Shield is connected to the Software UART 
-
-#include <SoftwareSerial.h>
-
-SoftwareSerial GSMSerial(7, 8);
-String serialStuff;
+String serialText;
+boolean GPSfix = false;
 
 void setup()
 {
-  GSMSerial.begin(19200);               // the GPRS/GSM baud rate   
+  Serial1.begin(19200);               // the GPRS/GSM baud rate   
   Serial.begin(19200);                 // the GPRS/GSM baud rate   
-  GSMSerial.println("AT+CGPSPWR=1");
+  Serial1.println("AT+CGPSPWR=1");
   delay(300);
-  GSMSerial.println("AT+CGPSRST=0");
+  Serial.println(Serial1.readString());
+  Serial1.println("AT+CGPSRST=0");
   delay(300);
+  Serial.println(Serial1.readString());
+  Serial1.println("AT+CGPSSTATUS?");
+  delay(300);
+  Serial.println(Serial1.readString());
 }
 
 void loop()
 {
-  delay(3000);
-  GSMSerial.flush();
-  GSMSerial.println("AT+CGPSINF=32");
+  waitForFix();
+  if(GPSfix){
+    Serial.println("Got a fix");
+  }
+  else{
+    Serial.println("Didn't get a fix");
+  }
+  
+  Serial1.println("AT+CGPSSTATUS?");
   delay(300);
-  if(GSMSerial.available())
-    Serial.println(GSMSerial.readString());
-    
-  delay(3000);
-  GSMSerial.flush();
-  GSMSerial.println("AT+CGPSSTATUS?");
+  Serial.println(Serial1.readString());
+  
+  waitForFix();
+  
+  delay(5000);
+  Serial1.println("AT+CGPSPWR=1");
   delay(300);
-  if(GSMSerial.available()){
-    serialStuff = GSMSerial.readString();
-    Serial.println(serialStuff);
-    Serial.print("serialStuff.indexOf('3D Fix'): ");
-    Serial.println(String(serialStuff.indexOf('3D Fix'),DEC));
+  Serial1.println("AT+CGPSRST=0");
+  delay(300);
+  Serial1.println("AT+CGPSSTATUS?");
+  delay(300);
+  Serial1.flush();
+  Serial.println("Reset again");
+  
+  Serial1.println("AT+CGPSSTATUS?");
+  delay(300);
+  Serial.println(Serial1.readString());
+}
 
-    if(serialStuff.indexOf('3D Fix') != -1)
-      Serial.println("\n~~~~~~~~~~~~~~~~\nGOT IT\n~~~~~~~~~~~\n");
+void waitForFix(){
+  GPSfix = false;
+  int startTime = millis();
+  boolean timeout = false;
+  Serial1.flush();
+  Serial1.println("AT+CGPSSTATUS?");
+  serialText = Serial.readString();
+  int now = millis();
+  
+  while(serialText.indexOf("3D Fix") <= 0){
+    Serial1.flush();
+    Serial1.println("AT+CGPSSTATUS?");
+    serialText = Serial1.readString();
+    /*
+    Serial.println("Got this while waiting for fix: ");
+    Serial.println(serialText);
+    Serial.print("\nserialText.indexOf(\"3D Fix\"): ");
+    Serial.println(serialText.indexOf("3D Fix"));
+    now = millis();
+    Serial.println("Time so far: ");
+    Serial.println(now - startTime);
+    */
     
-    Serial.println("\n\nTime is: ");
-    Serial.println(millis());
+    delay(1000);
+    if((now - startTime) > 300000){
+      timeout = true;
+      Serial.println("Timed out");
+    }
+  }
+  if(!timeout){
+    GPSfix = true;
+    Serial.println("Got it!");
+    /*
+    Serial1.flush();
+    Serial1.println("AT+CGPSSTATUS?");
+    serialText = Serial1.readString();
+    Serial.println("That took: ");
+    Serial.println(now - startTime);
+    */
   }
 }

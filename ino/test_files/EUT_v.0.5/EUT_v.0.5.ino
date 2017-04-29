@@ -9,7 +9,6 @@
 #include <SPI.h>
 #include <SD.h>
 
-
 int Powerkey = 9;
 File myFile;
 String serialText;
@@ -25,6 +24,7 @@ void setup()
 {
   Serial1.begin(19200);               // the GPRS/GSM baud rate   
   Serial.begin(19200);                 // the GPRS/GSM baud rate   
+  Serial1.flush();
 
   //Code to initialize interrupts. One on each pin. I had trouble with the "changing" interrupt.
   pinMode(2,INPUT);
@@ -49,11 +49,14 @@ void setup()
   Serial.println(F("initialization done."));
 
   Serial.println(F("Generating file..."));
+  
+  /*
   if(SD.exists("GPScache.txt")){
     Serial.println(F("Deleting old file..."));
     SD.remove("GPScache.txt");
     Serial.println(F("Old file deleted"));
   } 
+  */
   
   if((myFile = SD.open("GPScache.txt", FILE_WRITE)) == false){
     Serial.println(F("Failed to make file! Immediate attention required!")); 
@@ -72,10 +75,12 @@ void setup()
   delay(300);
   while(Serial1.available())
     Serial.print(Serial1.readString());
-  delay(300);
+  delay(1000);
   
   Serial1.println("AT+CGSN");
   serialText=Serial1.readString();
+  delay(300);
+  serialText+=Serial1.readString();
   int startOfID = serialText.indexOf('\n');
   serialText = serialText.substring(startOfID,startOfID+16);
   serialText.trim();
@@ -99,12 +104,17 @@ void loop()
     //Get location info in $GPRMC format. Contains date.
     updateSuccess = false;
     waitForFix();
+    delay(1000);
     Serial1.flush();
-    delay(300);
     Serial1.println("AT+CGPSINF=32");
     serialText = Serial1.readString();
+    delay(300);
+    serialText += Serial1.readString();
+    delay(300);
+    serialText += Serial1.readString();
     
     int startOfInfo = serialText.indexOf(' ');
+    int endOfInfo = serialText.indexOf("\,\,\,");
     Serial.println("\nThis is the return from CGPSINF:\n");
     Serial.print(serialText);
     Serial.println("\n*****END*****");
@@ -113,10 +123,9 @@ void loop()
       Serial.println("GPS ERROR: GPS LIKELY NEEDS TO BE RESET.");
     }
     else{
-      serialText = serialText.substring(startOfInfo, startOfInfo + 60);
+      serialText = serialText.substring(startOfInfo, endOfInfo);
       serialText.trim();
-      if(serialText.indexOf('0000.0000') == -1)
-        updateSuccess = true;
+      updateSuccess = true;
     }
 
     
@@ -147,6 +156,10 @@ void loop()
       Serial.print("Device can send data\n");
       printToSD("Success!");
       printToSD(UDPupdate);
+      delay(2000);
+      init_GPRS_connection();
+      delay(2000);
+      checkIn(UDPupdate);
     }  
     else if(updateSuccess){
       canSend = false;
@@ -167,7 +180,7 @@ void loop()
     }
   else{
     powerOff();
-    delay(2000);
+    delay(15000);
     powerOn();
   }
 }
@@ -211,25 +224,48 @@ void printToSD(String StuffToWrite){
 }
 
 void waitForFix(){
+  GPSfix = false;
   int startTime = millis();
   boolean timeout = false;
   Serial1.flush();
-  Serial1.println("AT+CGPSINF=32");
-  serialText = Serial.readString();
-  while(serialText.indexOf("A") < 0 && !timeout){
+  Serial1.println("AT+CGPSSTATUS?");
+  delay(300);
+  serialText = Serial1.readString();
+  Serial1.flush();
+  int now = millis();
+  
+  while(serialText.indexOf("3D Fix") <= 0){
     Serial1.flush();
-    Serial1.println("AT+CGPSINF=32");
+    Serial1.println("AT+CGPSSTATUS?");
+    delay(300);
     serialText = Serial1.readString();
+    Serial1.flush();
+    /*
     Serial.println("Got this while waiting for fix: ");
     Serial.println(serialText);
-    delay(5000);
-    if((millis() - startTime) > 300000){
+    Serial.print("\nserialText.indexOf(\"3D Fix\"): ");
+    Serial.println(serialText.indexOf("3D Fix"));
+    now = millis();
+    Serial.println("Time so far: ");
+    Serial.println(now - startTime);
+    */
+    
+    delay(1000);
+    if((now - startTime) > 300000){
       timeout = true;
       Serial.println("Timed out");
     }
   }
   if(!timeout){
     GPSfix = true;
+    /*
+    Serial.println("Got it!");
+    Serial1.flush();
+    Serial1.println("AT+CGPSSTATUS?");
+    serialText = Serial1.readString();
+    Serial.println("That took: ");
+    Serial.println(now - startTime);
+    */
   }
 }
 
@@ -241,7 +277,7 @@ void powerOn(){
   
   if(Serial1.available()){
     Serial.println("Already on");
-    Serial.println(Serial1.readString());
+    Serial1.flush();
   }
   else{
     Serial.println("Nothing to print");
@@ -288,10 +324,10 @@ void checkIn(String StringToSend)
   Serial1.flush();   //Clear existing Output on console 
   //Serial1.println("AT+CIPSTART=\"UDP\",\"50.160.250.112\",\"55057\"");
   Serial1.println("AT+CIPSTART=\"UDP\",\"cs4850udptest2.ddns.net\",\"55057\"");
-  delay(300);
+  delay(1000);
   
   Serial1.println("AT+CIPSEND\r");
-  delay(300);
+  delay(1000);
   while(Serial1.available())
     Serial.print((char)Serial1.read());
   
@@ -302,12 +338,65 @@ void checkIn(String StringToSend)
 
   delay(1000);
   Serial1.println("");
-  delay(300);
+  delay(1000);
   while(Serial1.available())
     Serial.print((char)Serial1.read());
 
   Serial1.println("AT+CIPCLOSE");
   delay(3000);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+
+  checkInDuplicate(StringToSend);
+}
+
+void checkInDuplicate(String StringToSend)
+{
+  Serial1.flush();   //Clear existing Output on console 
+  //Serial1.println("AT+CIPSTART=\"UDP\",\"50.160.250.112\",\"55057\"");
+  Serial1.println("AT+CIPSTART=\"UDP\",\"railserve.asuscomm.com\",\"4852\"");
+  delay(1000);
+  
+  Serial1.println("AT+CIPSEND\r");
+  delay(1000);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+  
+  Serial1.print(StringToSend);
+  delay(1000);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+
+  delay(1000);
+  Serial1.println("");
+  delay(1000);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+
+  Serial1.println("AT+CIPCLOSE");
+  delay(3000);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+}
+
+void init_GPRS_connection(){
+  Serial1.println("AT+CGATT?");
+  delay(300);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+
+  Serial1.println("AT+CSTT=\"internetd.gdsp\"");
+  delay(300);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+
+  Serial1.println("AT+CIICR");
+  delay(300);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+
+  Serial1.println("AT+CIFSR");
+  delay(300);
   while(Serial1.available())
     Serial.print((char)Serial1.read());
 }

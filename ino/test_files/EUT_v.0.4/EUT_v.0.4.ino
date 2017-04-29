@@ -9,7 +9,6 @@
 #include <SPI.h>
 #include <SD.h>
 
-
 int Powerkey = 9;
 File myFile;
 String serialText;
@@ -25,6 +24,7 @@ void setup()
 {
   Serial1.begin(19200);               // the GPRS/GSM baud rate   
   Serial.begin(19200);                 // the GPRS/GSM baud rate   
+  Serial1.flush();
 
   //Code to initialize interrupts. One on each pin. I had trouble with the "changing" interrupt.
   pinMode(2,INPUT);
@@ -72,7 +72,7 @@ void setup()
   delay(300);
   while(Serial1.available())
     Serial.print(Serial1.readString());
-  delay(300);
+  delay(1000);
   
   Serial1.println("AT+CGSN");
   serialText=Serial1.readString();
@@ -102,6 +102,7 @@ void loop()
     Serial1.flush();
     delay(300);
     Serial1.println("AT+CGPSINF=32");
+    delay(1000);
     serialText = Serial1.readString();
     
     int startOfInfo = serialText.indexOf(' ');
@@ -115,8 +116,7 @@ void loop()
     else{
       serialText = serialText.substring(startOfInfo, startOfInfo + 60);
       serialText.trim();
-      if(serialText.indexOf('0000.0000') == -1)
-        updateSuccess = true;
+      updateSuccess = true;
     }
 
     
@@ -147,6 +147,8 @@ void loop()
       Serial.print("Device can send data\n");
       printToSD("Success!");
       printToSD(UDPupdate);
+      init_GPRS_connection();
+      checkIn(UDPupdate);
     }  
     else if(updateSuccess){
       canSend = false;
@@ -211,25 +213,44 @@ void printToSD(String StuffToWrite){
 }
 
 void waitForFix(){
+  GPSfix = false;
   int startTime = millis();
   boolean timeout = false;
   Serial1.flush();
-  Serial1.println("AT+CGPSINF=32");
+  Serial1.println("AT+CGPSSTATUS?");
   serialText = Serial.readString();
-  while(serialText.indexOf("A") < 0 && !timeout){
+  int now = millis();
+  
+  while(serialText.indexOf("3D Fix") <= 0){
     Serial1.flush();
-    Serial1.println("AT+CGPSINF=32");
+    Serial1.println("AT+CGPSSTATUS?");
     serialText = Serial1.readString();
+    /*
     Serial.println("Got this while waiting for fix: ");
     Serial.println(serialText);
-    delay(5000);
-    if((millis() - startTime) > 300000){
+    Serial.print("\nserialText.indexOf(\"3D Fix\"): ");
+    Serial.println(serialText.indexOf("3D Fix"));
+    now = millis();
+    Serial.println("Time so far: ");
+    Serial.println(now - startTime);
+    */
+    
+    delay(1000);
+    if((now - startTime) > 300000){
       timeout = true;
       Serial.println("Timed out");
     }
   }
   if(!timeout){
     GPSfix = true;
+    /*
+    Serial.println("Got it!");
+    Serial1.flush();
+    Serial1.println("AT+CGPSSTATUS?");
+    serialText = Serial1.readString();
+    Serial.println("That took: ");
+    Serial.println(now - startTime);
+    */
   }
 }
 
@@ -241,7 +262,7 @@ void powerOn(){
   
   if(Serial1.available()){
     Serial.println("Already on");
-    Serial.println(Serial1.readString());
+    Serial1.flush();
   }
   else{
     Serial.println("Nothing to print");
@@ -288,10 +309,10 @@ void checkIn(String StringToSend)
   Serial1.flush();   //Clear existing Output on console 
   //Serial1.println("AT+CIPSTART=\"UDP\",\"50.160.250.112\",\"55057\"");
   Serial1.println("AT+CIPSTART=\"UDP\",\"cs4850udptest2.ddns.net\",\"55057\"");
-  delay(300);
+  delay(1000);
   
   Serial1.println("AT+CIPSEND\r");
-  delay(300);
+  delay(1000);
   while(Serial1.available())
     Serial.print((char)Serial1.read());
   
@@ -308,6 +329,28 @@ void checkIn(String StringToSend)
 
   Serial1.println("AT+CIPCLOSE");
   delay(3000);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+}
+
+void init_GPRS_connection(){
+  Serial1.println("AT+CGATT?");
+  delay(300);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+
+  Serial1.println("AT+CSTT=\"internetd.gdsp\"");
+  delay(300);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+
+  Serial1.println("AT+CIICR");
+  delay(300);
+  while(Serial1.available())
+    Serial.print((char)Serial1.read());
+
+  Serial1.println("AT+CIFSR");
+  delay(300);
   while(Serial1.available())
     Serial.print((char)Serial1.read());
 }
