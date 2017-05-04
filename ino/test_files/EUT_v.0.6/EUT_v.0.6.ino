@@ -3,8 +3,9 @@
 //Serial Relay - Arduino will patch a 
 //serial link between the computer and the GPRS Shield
 //at 19200 bps 8-N-1
-//Computer is connected to Hardware UART
-//GPRS Shield is connected to the Software UART 
+//Computer is connected to USB serial
+//GPRS Shield is connected to the Hardware UART on Serial1 pins. Could be remapped to Serial instead with pin jumpers instead 
+//of jumper wires, but USB serial must be disabled
 
 #include <SPI.h>
 #include <SD.h>
@@ -23,7 +24,7 @@ String UDPupdate;
 void setup()
 {
   Serial1.begin(19200);               // the GPRS/GSM baud rate   
-  Serial.begin(19200);                 // the GPRS/GSM baud rate   
+  Serial.begin(19200);                 // the PC baud rate   
   Serial1.flush();
 
   //Code to initialize interrupts. One on each pin. I had trouble with the "changing" interrupt.
@@ -34,9 +35,11 @@ void setup()
   attachInterrupt(0,interrupt0,FALLING);
   attachInterrupt(1,interrupt1,RISING);
   
+/* Serial print of available memory while troubleshooting low memory issues.
   Serial.print(F("freeMemory()="));
   Serial.println(freeMemory());
-
+*/
+  
   //checkPower();
   powerOn();
   
@@ -50,7 +53,7 @@ void setup()
 
   Serial.println(F("Generating file..."));
   
-  /*
+  /* Used to delete old log to replace with new one here.
   if(SD.exists("GPScache.txt")){
     Serial.println(F("Deleting old file..."));
     SD.remove("GPScache.txt");
@@ -67,6 +70,7 @@ void setup()
   
 
 
+  //Resets GPS shield/board
   Serial1.println("AT+CGPSPWR=1");
   delay(300);
   while(Serial1.available())
@@ -77,6 +81,7 @@ void setup()
     Serial.print(Serial1.readString());
   delay(1000);
   
+  //Command to query board for unique IMEI. Used as hardware ID
   Serial1.println("AT+CGSN");
   serialText=Serial1.readString();
   delay(300);
@@ -107,12 +112,14 @@ void loop()
     delay(1000);
     Serial1.flush();
     Serial1.println("AT+CGPSINF=32");
+    //Multiple attempted reads to account for occasional buffer filling preventing full Serial read from GPS Shield
     serialText = Serial1.readString();
     delay(300);
     serialText += Serial1.readString();
     delay(300);
     serialText += Serial1.readString();
     
+    //Checks for start and end of useful data. Trims accordingly.
     int startOfInfo = serialText.indexOf(' ');
     int endOfInfo = serialText.indexOf("\,\,\,");
     Serial.println("\nThis is the return from CGPSINF:\n");
@@ -121,6 +128,7 @@ void loop()
     
     if(serialText.indexOf("ERROR") > 0){
       Serial.println("GPS ERROR: GPS LIKELY NEEDS TO BE RESET.");
+      //Should put some code here to reset GPS and wait for fix again.
     }
     else{
       serialText = serialText.substring(startOfInfo, endOfInfo);
@@ -128,7 +136,7 @@ void loop()
       updateSuccess = true;
     }
 
-    
+    //Prints parsed GPS info to serial for debugging
     Serial.print("This is the return from substring:\n");
     Serial.print(serialText);
     Serial.println("\n*****END*****");
@@ -144,6 +152,7 @@ void loop()
     Serial.print("UDPupdate: ");
     Serial.println(UDPupdate);
     
+    //AT Command to query board for strength of GPRS fix
     Serial1.println("AT+CSQ");
     serialText=Serial1.readString();
     serialText = serialText.substring(serialText.indexOf(' '),serialText.indexOf(','));
@@ -185,6 +194,7 @@ void loop()
   }
 }
 
+//Simple SD write to log anything sent to this method to the SD card. Currently no methods to read logged data for resending
 void printToSD(String StuffToWrite){
   
   // open the file. note that only one file can be open at a time,
@@ -223,6 +233,8 @@ void printToSD(String StuffToWrite){
   */
 }
 
+//Waits for GPS fix. Queries GPS Shield for status of fix (can be no fix, 2d, or 3d fix), then loops until 3D fix (or 30 second timeout)
+//Doesn't return value, but sets global GPSfix variable.
 void waitForFix(){
   GPSfix = false;
   int startTime = millis();
@@ -269,6 +281,7 @@ void waitForFix(){
   }
 }
 
+//Checks if GPS Shield is on, turns on if not. Should probably call power() instead of having code for it here.
 void powerOn(){
   Serial1.flush();
   Serial1.println("");
@@ -298,6 +311,7 @@ void powerOn(){
   GPSfix = false;
 }
 
+//Checks if board power is on, then turns off if on
 void powerOff(){
   Serial1.flush();
   Serial1.println("");
@@ -319,6 +333,7 @@ void powerOff(){
   GPSfix = false;
 }
 
+//Inits UDP socket to server and sends UDP packet containing the string, then closes socket
 void checkIn(String StringToSend)
 {
   Serial1.flush();   //Clear existing Output on console 
@@ -346,39 +361,9 @@ void checkIn(String StringToSend)
   delay(3000);
   while(Serial1.available())
     Serial.print((char)Serial1.read());
-
-  checkInDuplicate(StringToSend);
 }
 
-void checkInDuplicate(String StringToSend)
-{
-  Serial1.flush();   //Clear existing Output on console 
-  //Serial1.println("AT+CIPSTART=\"UDP\",\"50.160.250.112\",\"55057\"");
-  Serial1.println("AT+CIPSTART=\"UDP\",\"railserve.asuscomm.com\",\"4852\"");
-  delay(1000);
-  
-  Serial1.println("AT+CIPSEND\r");
-  delay(1000);
-  while(Serial1.available())
-    Serial.print((char)Serial1.read());
-  
-  Serial1.print(StringToSend);
-  delay(1000);
-  while(Serial1.available())
-    Serial.print((char)Serial1.read());
-
-  delay(1000);
-  Serial1.println("");
-  delay(1000);
-  while(Serial1.available())
-    Serial.print((char)Serial1.read());
-
-  Serial1.println("AT+CIPCLOSE");
-  delay(3000);
-  while(Serial1.available())
-    Serial.print((char)Serial1.read());
-}
-
+//Queries GPS shield for IP after initializing GPRS connection
 void init_GPRS_connection(){
   Serial1.println("AT+CGATT?");
   delay(300);
@@ -401,6 +386,7 @@ void init_GPRS_connection(){
     Serial.print((char)Serial1.read());
 }
 
+//Toggles power of GPS shield
 void power()
 {
   digitalWrite(Powerkey, LOW); 
@@ -409,6 +395,7 @@ void power()
   Serial.println("Turned it on/off?");
 }
 
+//Checks if GPS board is on by printing AT and checking for any return from GPS board via UART
 boolean checkPower(){
   Serial1.flush();
   Serial1.println("");
@@ -424,6 +411,8 @@ boolean checkPower(){
   }
 }
 
+//Hardware interrupt to set OnOff to false if equipment is off. Needs pullup resistor to 
+//deal with floating input. Pullup resistor not yet implemented
 void interrupt0()
 {
  static unsigned long last_interrupt_time = 0;
@@ -440,6 +429,7 @@ void interrupt0()
  last_interrupt_time = interrupt_time;
 }
 
+//Hardware interrupt to set OnOff to true if equipment is on
 void interrupt1()
 {
  static unsigned long last_interrupt_time = 0;
